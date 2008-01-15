@@ -1,15 +1,8 @@
-%define	name	3ddesktop
-%define	version	0.2.9
-%define	cvsrel	cvs20040615
-%define	rel	3
-%define	release	%mkrel %{rel}
-%define	Summary	OpenGL virtual desktop switcher
-
-Summary:	%{Summary}
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-License:	GPL
+Summary:	OpenGL virtual desktop switcher
+Name:		3ddesktop
+Version:	0.2.9
+Release:	%mkrel 4
+License:	GPLv2+
 Group:		Graphical desktop/Other
 Source0:	%{name}-%{version}.tar.bz2
 Source11:	%{name}-16x16.png
@@ -17,7 +10,7 @@ Source12:	%{name}-32x32.png
 Source13:	%{name}-48x48.png
 #This might not be the best way, but..
 Source2:	%{name}.sh.bz2
-Patch0:		3ddesktop-0.2.9-x86_64.patch.bz2
+Patch0:		3ddesktop-0.2.9-x86_64.patch
 URL:		http://desk3d.sourceforge.net/
 Requires:	imlib2 >= 1.0.2
 BuildRequires:	imlib2-devel >= 1.0.2 
@@ -40,7 +33,7 @@ You might want to add a keybinding in your window manager for this one.
 
 %build
 ./autogen.sh
-CXXFLAGS="$RPM_OPT_FLAGS -O3" \
+CXXFLAGS="%{optflags} -O3" \
 %configure2_5x	--sysconfdir=%{_sysconfdir}/X11 \
 		--disable-dependency-tracking \
 		--with-qt-dir=%{_prefix}/lib/qt3 \
@@ -49,43 +42,46 @@ CXXFLAGS="$RPM_OPT_FLAGS -O3" \
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %{makeinstall_std}
-bzcat %{SOURCE2} > $RPM_BUILD_ROOT%{_bindir}/%{name}; chmod 755 $RPM_BUILD_ROOT%{_bindir}/%{name}
+bzcat %{SOURCE2} > %{buildroot}%{_bindir}/%{name}; chmod 755 %{buildroot}%{_bindir}/%{name}
 
-install -d $RPM_BUILD_ROOT%{_menudir}
-cat <<EOF >$RPM_BUILD_ROOT%{_menudir}/%{name}
-?package(%{name}):command="%{_bindir}/%{name}" \
-		  icon=%{name}.png \
-		  needs="x11" \
-		  section="Amusement/Toys" \
-		  title="3d-Desktop"\
-		  longtitle="%{Summary}"
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
+[Desktop Entry]
+Name=3DDesktop
+Comment=OpenGL-based 3D desktop switcher
+Exec=%{_bindir}/%{name} 
+Icon=%{name}
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Amusement;
 EOF
 
-install -m644 %{SOURCE11} -D $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
-install -m644 %{SOURCE12} -D $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
-install -m644 %{SOURCE13} -D $RPM_BUILD_ROOT%{_liconsdir}/%{name}.png
+
+install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
 %post
 %{update_menus}
+%{update_icon_cache hicolor}
 
 %postun
 %{clean_menus}
+%{clean_icon_cache hicolor}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
 %doc README ChangeLog TODO AUTHORS
 %{_bindir}/*
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/digits.bmp
+%{_datadir}/%{name}
 %{_mandir}/man1/*.1*
-%{_menudir}/%{name}
-%{_iconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
-%{_miconsdir}/%{name}.png
+%{_datadir}/applications/mandriva-%{name}.desktop
+%{_iconsdir}/hicolor/*/apps/%{name}.png
 %config(noreplace) %{_sysconfdir}/X11/%{name}.conf
 
