@@ -1,7 +1,7 @@
 Summary:	OpenGL virtual desktop switcher
 Name:		3ddesktop
 Version:	0.2.9
-Release:	%mkrel 4
+Release:	%mkrel 6
 License:	GPLv2+
 Group:		Graphical desktop/Other
 Source0:	%{name}-%{version}.tar.bz2
