@@ -11,7 +11,7 @@ Source13:	%{name}-48x48.png
 #This might not be the best way, but..
 Source2:	%{name}.sh.bz2
 Patch0:		3ddesktop-0.2.9-x86_64.patch
-URL:		http://desk3d.sourceforge.net/
+URL:		https://desk3d.sourceforge.net/
 Requires:	imlib2 >= 1.0.2
 BuildRequires:	imlib2-devel >= 1.0.2 
 BuildRequires:  freetype-devel 
