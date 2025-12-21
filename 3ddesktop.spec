@@ -13,6 +13,11 @@ Source2:	%{name}.sh.bz2
 Patch0:		3ddesktop-0.2.9-x86_64.patch
 URL:		https://desk3d.sourceforge.net/
 Requires:	imlib2 >= 1.0.2
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	imlib2-devel >= 1.0.2 
 BuildRequires:  freetype-devel 
 BuildRequires:  kdelibs-devel 
